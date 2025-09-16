@@ -29,12 +29,11 @@
 | **Среда разработки**             | IntelliJ IDEA (Cursive), VS Code (Calva) |
 
 ## В качестве идеи для 4 лабы
-
-<...>
+Планируем с коллегами делать проект, связанный с созданием парсера (json/csv/другой формат), так же создадим веб интерфейс. Идея будет дорабатываться.
 
 ## Источники
 
 - MICHAEL FOGUS, CHRIS HOUSER - The Joy of Clojure 
 - Документация [clojure.org](https://clojure.org/) 
 - Cтатьи на хабр
-- [Курс по изучению кложура]( https://code-basics.com/ru/languages/clojure)
+- [Курс по изучению Clojure]( https://code-basics.com/ru/languages/clojure)
