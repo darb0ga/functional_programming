@@ -10,5 +10,11 @@ jobs:
         working-directory: lab-1
     steps:
       - uses: actions/checkout@v4
+
+      - name: Install Leiningen
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y leiningen
+
       - name: Run tests for lab-1
         run: lein test
