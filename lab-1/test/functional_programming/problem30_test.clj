@@ -13,22 +13,20 @@
   (testing "Сумма пятых степеней цифр числа"
     ;; 4150 → 4^5 + 1^5 + 5^5 + 0^5 = 1024 + 1 + 3125 + 0 = 4150
     (is (= 4150 (sol/sum-digits-pow 4150)))
-    ;; 9474 → 9^5 + 4^5 + 7^5 + 4^5 = 59049 + 1024 + 16807 + 1024 = 9474
-    (is (= 9474 (sol/sum-digits-pow 9474)))
     ;; 123 → 1^5 + 2^5 + 3^5 = 1 + 32 + 243 = 276
     (is (= 276 (sol/sum-digits-pow 123)))))
 
 
 ;; Вызов Python-скрипта
 (defn run-python-script [script-path & args]
-  (let [command (into ["python3" script-path] args)
+  (let [command (into ["python" script-path] args)
         result (apply shell/sh command)]
     (if (zero? (:exit result))
       (str/trim (:out result))
       (throw (Exception. (str "Python error: " (:err result)))))))
 
 (defn run-problem30-python [start end]
-  (run-python-script "./lab-1/python_code/sol30.py" (str start) (str end)))
+  (run-python-script "./python_code/sol30.py" (str start) (str end)))
 
 ;; Проверка всех функций Clojure на маленьком диапазоне
 (deftest test-small-range

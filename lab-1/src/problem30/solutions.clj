@@ -3,11 +3,9 @@
 ;; Сумма пятых степеней цифр числа
 (defn sum-digits-pow [n]
   (->> (str n)
-       (map #(Integer/parseInt (str %)))
-       (map #(Math/pow % 5))
-       (reduce +)
-       long))
-
+        (map #(Character/digit % 10)) ; достаём цифру
+        (map #(reduce * (repeat 5 %))) ; целочисленно возводим в 5-ю степень
+        (reduce +)))
 
 ;; Хвостовая рекурсия
  (defn sum-tailrec [n limit]

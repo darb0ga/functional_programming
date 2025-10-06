@@ -18,14 +18,14 @@
 
 ;; Вызов Python-скрипта
 (defn run-python-script [script-path & args]
-  (let [command (into ["python3" script-path] args)
+  (let [command (into ["python" script-path] args)
         result (apply shell/sh command)]
     (if (zero? (:exit result))
       (str/trim (:out result))
       (throw (Exception. (str "Python error: " (:err result)))))))
 
 (defn run-problem1-python [start end]
-  (run-python-script "./lab-1/python_code/sol1.py" (str start) (str end)))
+  (run-python-script "./python_code/sol1.py" (str start) (str end)))
 
 
 ;; Проверка каждой реализации 
