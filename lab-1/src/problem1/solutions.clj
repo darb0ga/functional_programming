@@ -50,7 +50,7 @@
 
 ;; Бесконечные списки
 (defn sum-lazy [limit]
-  (->> (range limit)
+  (->> (take limit (range))
         (filter multiple-num?)
         (reduce +)))
 

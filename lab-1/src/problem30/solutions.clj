@@ -51,6 +51,7 @@
 
 ;; Бесконечные списки
 (defn sum-lazy [limit]
-  (->> (range 1000 limit)
-       (filter #(= (sum-digits-pow %) %))
-       (reduce +)))
+  (->> (drop 1000 (range))
+        (take limit)
+        (filter #(= (sum-digits-pow %) %))
+        (reduce +)))

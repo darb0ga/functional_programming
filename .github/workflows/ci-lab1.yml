@@ -8,13 +8,21 @@ jobs:
     defaults:
       run:
         working-directory: lab-1
+
     steps:
-      - uses: actions/checkout@v4
+      - name: Check out repository
+        uses: actions/checkout@v4
 
-      - name: Install Leiningen
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y leiningen
+      - name: Set up Clojure (Leiningen)
+        uses: DeLaGuardo/setup-clojure@12.1
+        with:
+          lein: '2.11.2'
 
-      - name: Run tests for lab-1
+      - name: Run code formatter check
+        run: lein cljfmt check
+
+      - name: Run linter
+        run: clj-kondo --lint src test
+
+      - name: Run tests
         run: lein test
