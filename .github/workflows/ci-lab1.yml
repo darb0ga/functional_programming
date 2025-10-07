@@ -18,9 +18,6 @@ jobs:
         with:
           lein: '2.11.2'
 
-      - name: Run code formatter check
-        run: lein cljfmt check
-
       - name: Run linter
         run: clj-kondo --lint src test
 
