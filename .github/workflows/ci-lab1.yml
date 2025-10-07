@@ -18,6 +18,13 @@ jobs:
         with:
           lein: '2.11.2'
 
+      - name: Install clj-kondo
+        run: |
+          curl -LO https://github.com/clj-kondo/clj-kondo/releases/latest/download/clj-kondo-2025.10.07-linux-amd64.zip
+          unzip clj-kondo-*-linux-amd64.zip
+          chmod +x clj-kondo
+          sudo mv clj-kondo /usr/local/bin/
+
       - name: Run linter
         run: clj-kondo --lint src test
 
