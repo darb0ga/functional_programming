@@ -16,6 +16,6 @@
                     ["cljfmt" "check"]
                     ["kibit"]
                     ["bikeshed" "--max-line-length" "120"]
-                    ["run" "-m" "clj-kondo.main" "--lint" "src" "test"]]}
-  :aliases {"run-problem1" ["run" "-m" "problem1.main"]
+                    ["run" "-m" "clj-kondo.main" "--lint" "src" "test"]]
+            "run-problem1" ["run" "-m" "problem1.main"]
             "run-problem30" ["run" "-m" "problem30.main"]})
