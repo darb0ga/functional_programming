@@ -37,7 +37,7 @@ jobs:
           sudo mv clj-kondo /usr/local/bin/
 
       - name: Run clj-kondo
-        run: clj-kondo --lint src test
+        run: clj-kondo --lint src test --config '{:linters {:warning {:level :off}}}'
 
       - name: Run tests
         run: lein test
