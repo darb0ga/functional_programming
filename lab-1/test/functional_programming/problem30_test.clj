@@ -5,7 +5,8 @@
             [problem30.solutions :as sol]))
 
 ;; Общие тестовые данные 
-(def small-limit 1000) 
+(def small-limit 1000)
+(def medium-limit 2000)
 (def test-limit 355000) ;; для проверки результата - предел = 6 * 9^5 = 354294
 
 ;; Тестирование вспомогательной функции
@@ -31,13 +32,12 @@
 ;; Проверка всех функций Clojure на маленьком диапазоне
 (deftest test-small-range
   (testing "Проверка всех реализаций на малом диапазоне"
-    (let [res-tail (sol/sum-tailrec 1000 2000)
-          res-rec  (sol/sum-rec 1000 2000)
-          res-red  (sol/sum-reduce 1000 2000)
-          res-map  (sol/sum-map 1000 2000)
-          res-spec (sol/sum-spec 1000 2000)
-          res-lazy (sol/sum-lazy 2000)]
-      ;; Проверяем, что все реализации дают одинаковый результат
+    (let [res-tail (sol/sum-tailrec small-limit medium-limit)
+          res-rec  (sol/sum-rec small-limit medium-limit)
+          res-red  (sol/sum-reduce small-limit medium-limit)
+          res-map  (sol/sum-map small-limit medium-limit)
+          res-spec (sol/sum-spec small-limit medium-limit)
+          res-lazy (sol/sum-lazy medium-limit)]
       (is (apply = [res-tail res-rec res-red res-map res-spec res-lazy])))))
 
 ;; Сравнение с Python
@@ -49,5 +49,4 @@
                        (sol/sum-map small-limit test-limit)
                        (sol/sum-spec small-limit test-limit)
                        (sol/sum-lazy test-limit)]]
-      ;; Сравниваем Python и все Clojure реализации
       (is (apply = py-result clj-results)))))
