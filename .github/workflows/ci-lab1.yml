@@ -1,42 +1,37 @@
 name: Clojure CI
 
-on: [push, pull_request]
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
 
 jobs:
-  test:
+  build:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: lab-1
-    
+
     steps:
-      - uses: actions/checkout@v3
+      - name: Check out code
+        uses: actions/checkout@v4
 
-      - name: Set up JDK 11
-        uses: actions/setup-java@v3
+      - name: Set up Clojure (Leiningen)
+        uses: DeLaGuardo/setup-clojure@12.1
         with:
-          java-version: '11'
-          distribution: 'temurin'
+          lein: '2.11.2'
 
-      - name: Cache dependencies
-        uses: actions/cache@v3
+      - name: Cache Leiningen dependencies
+        uses: actions/cache@v4
         with:
-          path: |
-            ~/.m2
-            ~/.lein
-            ./target
+          path: ~/.m2
           key: ${{ runner.os }}-lein-${{ hashFiles('project.clj') }}
           restore-keys: |
             ${{ runner.os }}-lein-
 
-      - name: Install Leiningen
-        run: |
-          curl -L https://raw.githubusercontent.com/technomancy/leiningen/stable/bin/lein > lein
-          chmod +x lein
-          sudo mv lein /usr/local/bin/
+      - name: Install dependencies
+        run: lein deps
+
+      - name: Run linter
+        run: lein lint || true  
 
       - name: Run tests
         run: lein test
-
-      - name: Run code quality checks
-        run: lein lint || true
