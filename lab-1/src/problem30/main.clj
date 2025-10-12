@@ -2,7 +2,7 @@
   (:require
    [problem30.solutions :as nextproblem]))
 
-(defn -main [& args]
+(defn -main [& _args]
   (println "Хвостовая рекурсия:" (nextproblem/sum-tailrec 1000 355000))
   (println "Обычная рекурсия:" (nextproblem/sum-rec 1000 5000))
   (println "Модульная реализация:" (nextproblem/sum-reduce 1000 355000))

@@ -1,14 +1,14 @@
 (ns functional-programming.problem1-test
-  (:require [clojure.test :refer :all]
+  (:require [clojure.test :refer [deftest is testing]]
             [clojure.java.shell :as shell]
             [clojure.string :as str]
             [problem1.solutions :as sol]))
 
-;; Общие тестовые данные 
+;; Общие тестовые данные
 (def small-limit 10)  ;; числа до 10 → кратные 3 или 5: 3 + 5 + 6 + 9 = 23
 (def test-limit 1000) ;; для проверки результата
 
-;; Проверка вспомогательной функции 
+;; Проверка вспомогательной функции
 (deftest test-multiple-num
   (testing "Проверка кратности 3 или 5"
     (is (true? (sol/multiple-num? 3)))
@@ -26,7 +26,7 @@
 (defn run-problem1-python [start end]
   (run-python-script "./python_code/sol1.py" (str start) (str end)))
 
-;; Проверка каждой реализации 
+;; Проверка каждой реализации
 (deftest test-sum-tailrec
   (testing "Хвостовая рекурсия до 10"
     (is (= 23 (sol/sum-tailrec 1 small-limit 0)))))
@@ -51,7 +51,7 @@
   (testing "Через ленивую последовательность"
     (is (= 23 (sol/sum-lazy small-limit)))))
 
-;; Проверка согласованности между всеми реализациями 
+;; Проверка согласованности между всеми реализациями
 (deftest test-consistency
   (testing "Все реализации дают одинаковый результат при большом лимите"
     (let [py-result (Long/parseLong (run-problem1-python 1 test-limit))

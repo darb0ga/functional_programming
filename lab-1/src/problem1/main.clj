@@ -2,7 +2,7 @@
   (:require
    [problem1.solutions :as firstproblem]))
 
-(defn -main [& args]
+(defn -main [& _args]
   (println "Хвостовая рекурсия:" (firstproblem/sum-tailrec 1 1000 0))
   (println "Обычная рекурсия:" (firstproblem/sum-rec 1 1000))
   (println "Модульная реализация:" (firstproblem/sum-reduce 1 1000))

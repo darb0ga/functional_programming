@@ -17,7 +17,7 @@
              (if (= (sum-digits-pow i) i)
                (+ acc i) acc)))))
 
-;; Рекурсия 
+;; Рекурсия
 (defn sum-rec [n limit]
   (if (>= n limit)
     0

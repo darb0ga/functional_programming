@@ -1,10 +1,10 @@
 (ns functional-programming.problem30-test
-  (:require [clojure.test :refer :all]
+  (:require [clojure.test :refer [deftest is testing]]
             [clojure.java.shell :as shell]
             [clojure.string :as str]
             [problem30.solutions :as sol]))
 
-;; Общие тестовые данные 
+;; Общие тестовые данные
 (def small-limit 1000)
 (def medium-limit 2000)
 (def test-limit 355000) ;; для проверки результата - предел = 6 * 9^5 = 354294

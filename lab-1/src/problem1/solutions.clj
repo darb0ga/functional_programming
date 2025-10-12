@@ -14,7 +14,7 @@
            (if (multiple-num? n)
              (+ acc n) acc))))
 
-;; Рекурсия 
+;; Рекурсия
 (defn sum-rec [n limit]
   (if (>= n limit)
     0
@@ -49,4 +49,3 @@
   (->> (take limit (range))
        (filter multiple-num?)
        (reduce +)))
-
