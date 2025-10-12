@@ -10,6 +10,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    defaults:
+      run:
+        working-directory: lab-1   
+
     steps:
       - name: Check out code
         uses: actions/checkout@v4
@@ -23,7 +27,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/.m2
-          key: ${{ runner.os }}-lein-${{ hashFiles('project.clj') }}
+          key: ${{ runner.os }}-lein-${{ hashFiles('lab-1/project.clj') }}
           restore-keys: |
             ${{ runner.os }}-lein-
 
@@ -31,7 +35,7 @@ jobs:
         run: lein deps
 
       - name: Run linter
-        run: lein lint || true  
+        run: lein lint
 
       - name: Run tests
         run: lein test
