@@ -15,7 +15,6 @@
     (is (true? (sol/multiple-num? 5)))
     (is (false? (sol/multiple-num? 7)))))
 
-
 ;; Вызов Python-скрипта
 (defn run-python-script [script-path & args]
   (let [command (into ["python" script-path] args)
@@ -26,7 +25,6 @@
 
 (defn run-problem1-python [start end]
   (run-python-script "./python_code/sol1.py" (str start) (str end)))
-
 
 ;; Проверка каждой реализации 
 (deftest test-sum-tailrec
@@ -58,9 +56,9 @@
   (testing "Все реализации дают одинаковый результат при большом лимите"
     (let [py-result (Long/parseLong (run-problem1-python 1 test-limit))
           clj-results [(sol/sum-tailrec 1 test-limit 0)
-                   (sol/sum-rec 1 test-limit)
-                   (sol/sum-reduce 1 test-limit)
-                   (sol/sum-map 1 test-limit)
-                   (sol/sum-spec 1 test-limit)
-                   (sol/sum-lazy test-limit)]]
+                       (sol/sum-rec 1 test-limit)
+                       (sol/sum-reduce 1 test-limit)
+                       (sol/sum-map 1 test-limit)
+                       (sol/sum-spec 1 test-limit)
+                       (sol/sum-lazy test-limit)]]
       (is (apply = py-result clj-results)))))

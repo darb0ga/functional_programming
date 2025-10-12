@@ -1,6 +1,6 @@
 (ns problem30.main
   (:require
-  [problem30.solutions :as nextproblem]))
+   [problem30.solutions :as nextproblem]))
 
 (defn -main [& args]
   (println "Хвостовая рекурсия:" (nextproblem/sum-tailrec 1000 355000))

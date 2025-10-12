@@ -17,7 +17,6 @@
     ;; 123 → 1^5 + 2^5 + 3^5 = 1 + 32 + 243 = 276
     (is (= 276 (sol/sum-digits-pow 123)))))
 
-
 ;; Вызов Python-скрипта
 (defn run-python-script [script-path & args]
   (let [command (into ["python" script-path] args)
