@@ -27,11 +27,6 @@ jobs:
         with:
           lein: '2.11.2'
 
-      - name: Create clj-kondo config
-        run: |
-          mkdir -p lab-2/.clj-kondo
-          echo '{:lint-as {clojure.test.check.clojure-test/defspec clojure.core/def}}' > lab-2/.clj-kondo/config.edn
-
       - name: Cache Leiningen dependencies
         uses: actions/cache@v4
         with:
@@ -40,8 +35,16 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-lein-
 
+      - name: Create clj-kondo config
+        run: |
+          mkdir -p .clj-kondo
+          echo '{:lint-as {clojure.test.check.clojure-test/defspec clojure.core/def}}' > lab-2/.clj-kondo/config.edn
+
       - name: Install dependencies
         run: lein deps
+
+      - name: Clean previous builds
+        run: lein clean
 
       - name: Run linter
         run: lein lint

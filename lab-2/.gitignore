@@ -15,7 +15,6 @@ pom.xml.asc
 /.lsp/
 /.clj-kondo/.cache/
 /.clj-kondo/.lsp/
-/.clj-kondo
 
 # === IDE / Editor junk ===
 .idea/
