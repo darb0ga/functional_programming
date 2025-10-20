@@ -26,7 +26,7 @@
       (is (= [2] (b/bag->seq filtered))))))
 
 (deftest folds
-  (testing "foldr и foldl должны совпадать при коммутативных функциях"
+  (testing "foldr и foldl должны совпадать"
     (let [bag (reduce b/bag-insert (b/bag-empty) [1 2 3])]
       (is (= (b/bag-foldr + 0 bag)
              (b/bag-foldl + 0 bag)))
