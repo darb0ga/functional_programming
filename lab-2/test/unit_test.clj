@@ -1,5 +1,5 @@
 (ns unit-test
-  (:require [clojure.test :refer :all]
+  (:require [clojure.test :refer [deftest is testing]]
             [bt-bag :as b]))
 
 (deftest basic-operations
