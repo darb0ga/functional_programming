@@ -24,11 +24,11 @@
 (defn bag-empty? [bag]
   (tree/tree-empty? (:tree bag)))
 
-(defn bag-equal? [b1 b2]
-  (tree/tree-equal? (:tree b1) (:tree b2)))
-
-(defn bag->seq [bag]
+(defn bag-seq [bag]
   (tree/inorder (:tree bag)))
+
+(defn bag-equal? [b1 b2]
+  (= (bag-seq b1) (bag-seq b2)))
 
 (defn bag-map [f bag]
   (->Bag (tree/from-seq (map f (tree/inorder (:tree bag))))))
@@ -41,3 +41,6 @@
 
 (defn bag-foldl [f acc bag]
   (tree/foldl f acc (:tree bag)))
+
+(defn bag-concat [b1 b2]
+  (reduce bag-insert b1 (bag-seq b2)))
