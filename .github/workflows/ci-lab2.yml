@@ -3,8 +3,12 @@ name: Clojure CI - Lab2
 on:
   push:
     branches: [ main ]
+    paths:
+      - 'lab-2/**'
   pull_request:
     branches: [ main ]
+    paths:
+      - 'lab-2/**'
 
 jobs:
   build:
@@ -25,8 +29,8 @@ jobs:
 
       - name: Create clj-kondo config
         run: |
-          mkdir -p .clj-kondo
-          echo '{:lint-as {clojure.test.check.clojure-test/defspec clojure.core/def}}' > .clj-kondo/config.edn
+          mkdir -p lab-2/.clj-kondo
+          echo '{:lint-as {clojure.test.check.clojure-test/defspec clojure.core/def}}' > lab-2/.clj-kondo/config.edn
 
       - name: Cache Leiningen dependencies
         uses: actions/cache@v4

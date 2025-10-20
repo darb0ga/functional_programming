@@ -1,10 +1,14 @@
-name: Clojure CI
+name: Clojure CI - Lab1
 
 on:
   push:
     branches: [ main ]
+    paths:
+      - 'lab-1/**'
   pull_request:
     branches: [ main ]
+    paths:
+      - 'lab-1/**'
 
 jobs:
   build:
