@@ -32,7 +32,7 @@
                      (b/bag-size mapped)))))
 
 ;; Свойства моноида - нейтральный элемент
-(defspec prop-monoid-identity-left
+(defspec prop-monoid-identity
   20
   (prop/for-all [xs (gen/vector gen/int)]
                 (let [bag (reduce b/bag-insert (b/bag-empty) xs)
