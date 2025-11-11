@@ -1,62 +1,52 @@
 (ns unit-tests
   (:require [clojure.test :refer [deftest is testing]]
-            [bt-bag :as b]
-            [clojure.test.check.generators :as gen]))
-
-;;  Генерация случайных множеств
-(defn random-bag
-  ([] (random-bag 5))
-  ([n]
-   (reduce b/bag-insert (b/bag-empty)
-           (gen/sample (gen/choose 0 9) n))))
+            [bt-bag :as b]))
 
 (deftest basic-operations
   (testing "Проверка базовых операций bag"
     (let [bag1 (b/bag-empty)
-          random-vals (gen/sample (gen/elements [1 2 3 4 5 6 7 8 9]) 3)
-          bag2 (reduce b/bag-insert bag1 random-vals)]
-      (is (false? (b/bag-empty? bag2)))
-      (is (>= (b/bag-size bag2) 1))
-      (is (= (count (b/bag-seq bag2)) (b/bag-count bag2)))
-      (is (every? int? (b/bag-seq bag2)))
-      (is (= (sort (b/bag-seq bag2)) (sort (b/bag-seq bag2))))
-      (doseq [x random-vals]
-        (is (b/bag-find bag2 x))))))
+          bag2 (b/bag-insert bag1 5)
+          bag3 (b/bag-insert bag2 3)
+          bag4 (b/bag-insert bag3 5)]
+
+      (is (false? (b/bag-empty? bag4)))
+      (is (= 2 (b/bag-size bag4)))
+      (is (= 3 (b/bag-count bag4)))
+      (is (some #(= 5 %) (b/bag-seq bag4)))
+      (is (= [3 5 5] (b/bag-seq bag4)))
+      (is (b/bag-find bag4 3))
+      (is (nil? (b/bag-find bag4 42)))
+      (is (= [5 5] (b/bag-seq (b/bag-remove bag4 3)))))))
 
 (deftest removal-operations
   (testing "Операции удаления"
-    (let [bag (random-bag 6)
-          seq-before (b/bag-seq bag)
-          element (rand-nth seq-before)
-          after-remove (b/bag-remove bag element)]
-      (is (<= (b/bag-size after-remove) (b/bag-size bag)))
-      (is (not (nil? (b/bag-seq after-remove))))
-      (is (<= (b/bag-count after-remove) (b/bag-count bag)))
-      (is (not-any? #(= % element)
-                    (when (not-any? #(= % element) seq-before)
-                      (b/bag-seq (b/bag-remove bag element))))))))
+    (let [bag (-> (b/bag-empty)
+                  (b/bag-insert 1) (b/bag-insert 2) (b/bag-insert 2) (b/bag-insert 3))
+          after-remove (b/bag-remove bag 2)]
+      (is (= [1 2 3] (b/bag-seq after-remove)))
+      (is (= [1 3] (b/bag-seq (b/bag-remove after-remove 2))))
+      (is (= [1 2 2 3] (b/bag-seq (b/bag-remove bag 42)))))))
 
 (deftest mapping-and-filtering
   (testing "Map и Filter"
-    (let [bag (random-bag 4)
+    (let [bag (b/bag-insert (b/bag-insert (b/bag-insert (b/bag-empty) 1) 2) 3)
           mapped (b/bag-map #(* 2 %) bag)
           filtered (b/bag-filter even? bag)]
-      (is (every? int? (b/bag-seq mapped)))
-      (is (every? even? (b/bag-seq filtered)))
-      (is (= (count (b/bag-seq filtered))
-             (count (filter even? (b/bag-seq bag))))))))
+      (is (= [2 4 6] (b/bag-seq mapped)))
+      (is (= [2] (b/bag-seq filtered))))))
 
 (deftest folds
   (testing "foldr и foldl должны совпадать"
-    (let [bag (random-bag 5)]
+    (let [bag (reduce b/bag-insert (b/bag-empty) [1 2 3])]
       (is (= (b/bag-foldr + 0 bag)
-             (b/bag-foldl + 0 bag))))))
+             (b/bag-foldl + 0 bag)))
+      (is (= 6 (b/bag-foldr + 0 bag))))))
 
 (deftest monoid-properties
   (testing "Свойства моноида"
     (let [empty-bag (b/bag-empty)
-          bag1 (random-bag 4)
-          bag2 (random-bag 3)]
+          bag1 (reduce b/bag-insert empty-bag [1 2 2])
+          bag2 (reduce b/bag-insert empty-bag [3 4])]
       (testing "Левая единица"
         (is (b/bag-equal? bag1 (b/bag-concat empty-bag bag1))))
       (testing "Правая единица"
@@ -68,13 +58,13 @@
           (is (b/bag-equal? left-assoc right-assoc))))
       (testing "Конкатенация множеств"
         (let [concatenated (b/bag-concat bag1 bag2)]
-          (is (= 7 (b/bag-count concatenated))))))))
+          (is (= 4 (b/bag-size concatenated)))
+          (is (= 5 (b/bag-count concatenated))))))))
 
 (deftest equality-testing
   (testing "Эффективное сравнение множеств"
-    (let [vals [1 2 2 3]
-          bag1 (reduce b/bag-insert (b/bag-empty) vals)
-          bag2 (reduce b/bag-insert (b/bag-empty) (shuffle vals))
+    (let [bag1 (reduce b/bag-insert (b/bag-empty) [1 2 2 3])
+          bag2 (reduce b/bag-insert (b/bag-empty) [2 1 3 2])
           bag3 (reduce b/bag-insert (b/bag-empty) [1 2 3])
           bag4 (reduce b/bag-insert (b/bag-empty) [1 2 3 4])]
       (is (b/bag-equal? bag1 bag2))
