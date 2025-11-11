@@ -5,52 +5,50 @@
             [tree]
             [bt-bag :as b]))
 
- ;; Кастомный генератор
-(defn gen-int-bag []
-  (gen/vector gen/int))
+;; Кастомный генератор, который сразу создает bag
+(defn gen-bag []
+  (gen/fmap
+   (fn [xs] (reduce b/bag-insert (b/bag-empty) xs))
+   (gen/vector gen/int)))
 
- ;; Тестирование функции count
+;; Альтернативный вариант с более сложной логикой генерации
+(defn gen-bag-complex []
+  (gen/let [xs (gen/vector gen/int)]
+    (reduce b/bag-insert (b/bag-empty) xs)))
+
+;; Упрощенные тесты с новым генератором
+
 (defspec prop-bag-count-vs-seq
   20
-  (prop/for-all [xs (gen-int-bag)]
-                (let [bag (reduce b/bag-insert (b/bag-empty) xs)]
-                  (= (b/bag-count bag)
-                     (count (b/bag-seq bag))))))
+  (prop/for-all [bag (gen-bag)]
+                (= (b/bag-count bag)
+                   (count (b/bag-seq bag)))))
 
- ;; Сравнение двух множеств
 (defspec prop-bag-equal-symmetric
   20
-  (prop/for-all [xs (gen-int-bag)]
-                (let [b1 (reduce b/bag-insert (b/bag-empty) xs)
-                      b2 (reduce b/bag-insert (b/bag-empty) xs)]
-                  (= (b/bag-equal? b1 b2)
-                     (b/bag-equal? b2 b1)))))
+  (prop/for-all [bag (gen-bag)]
+                (let [bag-copy (reduce b/bag-insert (b/bag-empty) (b/bag-seq bag))]
+                  (= (b/bag-equal? bag bag-copy)
+                     (b/bag-equal? bag-copy bag)))))
 
- ;; Тестирование размера множества
 (defspec prop-map-preserves-size
   20
-  (prop/for-all [xs (gen-int-bag)]
-                (let [bag (reduce b/bag-insert (b/bag-empty) xs)
-                      mapped (b/bag-map inc bag)]
+  (prop/for-all [bag (gen-bag)]
+                (let [mapped (b/bag-map inc bag)]
                   (= (b/bag-size bag)
                      (b/bag-size mapped)))))
 
- ;; Свойства моноида - нейтральный элемент
 (defspec prop-monoid-identity
   20
-  (prop/for-all [xs (gen-int-bag)]
-                (let [bag (reduce b/bag-insert (b/bag-empty) xs)
-                      empty-bag (b/bag-empty)]
-                  (b/bag-equal? bag (b/bag-concat empty-bag bag)))))
+  (prop/for-all [bag (gen-bag)]
+                (let [empty-bag (b/bag-empty)]
+                  (and (b/bag-equal? bag (b/bag-concat empty-bag bag))
+                       (b/bag-equal? bag (b/bag-concat bag empty-bag))))))
 
- ;; Свойства моноида - ассоциативность
 (defspec prop-monoid-associativity
   20
-  (prop/for-all [xs (gen-int-bag)
-                 ys (gen-int-bag)
-                 zs (gen-int-bag)]
-                (let [b1 (reduce b/bag-insert (b/bag-empty) xs)
-                      b2 (reduce b/bag-insert (b/bag-empty) ys)
-                      b3 (reduce b/bag-insert (b/bag-empty) zs)]
-                  (b/bag-equal? (b/bag-concat (b/bag-concat b1 b2) b3)
-                                (b/bag-concat b1 (b/bag-concat b2 b3))))))
+  (prop/for-all [b1 (gen-bag)
+                 b2 (gen-bag)
+                 b3 (gen-bag)]
+                (b/bag-equal? (b/bag-concat (b/bag-concat b1 b2) b3)
+                              (b/bag-concat b1 (b/bag-concat b2 b3)))))
