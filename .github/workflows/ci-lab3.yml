@@ -1,0 +1,53 @@
+name: Clojure CI - Lab3
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'lab-3/**'
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'lab-3/**'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: lab-3
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      - name: Set up Clojure (Leiningen)
+        uses: DeLaGuardo/setup-clojure@12.1
+        with:
+          lein: '2.11.2'
+
+      - name: Cache Leiningen dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-lein-${{ hashFiles('lab-2/project.clj') }}
+          restore-keys: |
+            ${{ runner.os }}-lein-
+
+      - name: Create clj-kondo config
+        run: |
+          mkdir -p .clj-kondo
+          echo '{:lint-as {clojure.test.check.clojure-test/defspec clojure.core/def}}' > .clj-kondo/config.edn
+
+      - name: Install dependencies
+        run: lein deps
+
+      - name: Clean previous builds
+        run: lein clean
+
+      - name: Run linter
+        run: lein lint
+
+      - name: Run tests
+        run: lein test
