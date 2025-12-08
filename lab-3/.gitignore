@@ -1,0 +1,34 @@
+# === Clojure / Leiningen ===
+/target/
+/classes/
+/checkouts/
+/.lein-*
+/.nrepl-port
+/.prepl-port
+profiles.clj
+pom.xml
+pom.xml.asc
+*.jar
+*.class
+
+# === Clojure LSP (Language Server) ===
+/.lsp/
+/.clj-kondo/.cache/
+/.clj-kondo/.lsp/
+
+# === IDE / Editor junk ===
+.idea/
+/.vscode/
+/*.iml
+
+# === OS junk ===
+.DS_Store
+Thumbs.db
+
+# === Logs / temp ===
+*.log
+*.tmp
+
+# === Other ===
+.hgignore
+.hg/
