@@ -3,8 +3,7 @@
             [algorithms :as algo]))
 
 (defn run-linear
-  "Удобный helper для тестов: прогоняет список точек через linear-step
-   и возвращает все выходные точки."
+  "прогоняет список точек через linear-step"
   [step points]
   (let [init-state {:prev nil :next-x nil :step step}]
     (:out
@@ -17,7 +16,7 @@
              points))))
 
 (defn run-newton
-  "Helper для тестов Ньютона: прогоняет список точек через newton-step."
+  "прогоняет список точек через newton-step"
   [step n points]
   (let [init-state {:points [] :step step :n n :next-x nil}]
     (:out

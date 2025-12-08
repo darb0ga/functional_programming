@@ -23,7 +23,6 @@
 
 
 (defn parse-point
-  "Парсит строку вида \"x y\", \"x;y\", \"x\\ty\" в точку {:x .. :y ..}."
   [line]
   (let [[sx sy] (-> line
                     str/trim
@@ -32,13 +31,10 @@
      :y (Double/parseDouble sy)}))
 
 (defn print-point
-  "Форматированный вывод точки (чтобы не было 2.0999999999996)."
   [name x y]
-  (println (format "%s: %.6f %.6f" name x y)))
+  (println (format "%s: %.4f %.4f" name x y)))
 
 (defn process-stream
-  "Читает точки из stdin и по мере поступления печатает результаты.
-   После каждого обработанного входа делает flush, чтобы вывод не тормозил."
   [algos ^BufferedReader rdr]
   (loop [lines (line-seq rdr)
          algos algos]
@@ -47,7 +43,6 @@
             rest-lines (rest lines)]
         (if (str/blank? line)
           (do
-            ;; просто пустая строка – ничего не делаем, но всё равно flush
             (flush)
             (recur rest-lines algos))
           (let [pt      (parse-point line)
@@ -58,23 +53,18 @@
                                    :name name
                                    :out  out}))
                               algos)]
-            ;; выводим все рассчитанные точки *сразу* после обработки строки
             (doseq [{:keys [name out]} results
                     [x y]              out]
               (print-point name x y))
-            ;; принудительно сбрасываем буфер, чтобы в интерактиве не было лагов
+            ;; принудительно сбрасываем буфер
             (flush)
             (recur rest-lines (mapv :algo results)))))
-      ;; EOF – финализация алгоритмов
       (do
         (doseq [{:keys [name state finalize-fn]} algos
                 [x y]                        (finalize-fn state)]
           (print-point name x y))
         (flush)))))
 
-;; ------------------------------------------------------------
-;; Точка входа
-;; ------------------------------------------------------------
 
 (defn -main
   [& args]
@@ -82,7 +72,7 @@
         algos (algo/build-algorithms opts)]
     (when (empty? algos)
       (binding [*out* *err*]
-        (println "Нужно указать хотя бы один алгоритм: --linear и/или --newton")
+        (println "Нужно указать хотя бы один алгоритм: --linear или --newton")
         (flush)
         (System/exit 1)))
     (let [rdr (BufferedReader. *in*)]
