@@ -1,5 +1,5 @@
 (ns algorithms-tests
-  (:require [clojure.test :refer :all]
+  (:require [clojure.test :refer [deftest is testing]]
             [algorithms :as algo]))
 
 (defn run-linear
