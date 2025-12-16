@@ -4,7 +4,8 @@
             [algorithms :as algo])
   (:import (java.io BufferedReader)))
 
-(defn parse-args [args]
+(defn parse-args
+  [args]
   (loop [opts {:linear? false
                :newton? false
                :step    1.0
@@ -21,8 +22,8 @@
                      (recur (assoc opts :n (Integer/parseInt v)) rest-args))
         (recur opts more)))))
 
-
 (defn parse-point
+  "Парсит строку вида \"x y\", \"x;y\", \"x\\ty\" в точку {:x .. :y ..}."
   [line]
   (let [[sx sy] (-> line
                     str/trim
@@ -31,10 +32,15 @@
      :y (Double/parseDouble sy)}))
 
 (defn print-point
+  "Форматированный вывод точки (чтобы не было 2.0999999999996)."
   [name x y]
-  (println (format "%s: %.4f %.4f" name x y)))
+  (println (format "%s: %.6f %.6f" name x y)))
 
 (defn process-stream
+  "Читает точки из stdin и по мере поступления печатает результаты.
+   Если встречает пустую строку — считает это концом ввода, выполняет
+   финализацию алгоритмов и завершает работу. После каждого обработанного
+   входа делает flush, чтобы вывод не тормозил."
   [algos ^BufferedReader rdr]
   (loop [lines (line-seq rdr)
          algos algos]
@@ -43,8 +49,10 @@
             rest-lines (rest lines)]
         (if (str/blank? line)
           (do
-            (flush)
-            (recur rest-lines algos))
+            (doseq [{:keys [name state finalize-fn]} algos
+                    [x y]                        (finalize-fn state)]
+              (print-point name x y))
+            (flush))
           (let [pt      (parse-point line)
                 results (mapv (fn [{:keys [name state step-fn] :as algo}]
                                 (let [{next-state :state
@@ -56,7 +64,6 @@
             (doseq [{:keys [name out]} results
                     [x y]              out]
               (print-point name x y))
-            ;; принудительно сбрасываем буфер
             (flush)
             (recur rest-lines (mapv :algo results)))))
       (do
@@ -65,14 +72,13 @@
           (print-point name x y))
         (flush)))))
 
-
 (defn -main
   [& args]
   (let [opts  (parse-args args)
         algos (algo/build-algorithms opts)]
     (when (empty? algos)
       (binding [*out* *err*]
-        (println "Нужно указать хотя бы один алгоритм: --linear или --newton")
+        (println "Нужно указать хотя бы один алгоритм: --linear и/или --newton")
         (flush)
         (System/exit 1)))
     (let [rdr (BufferedReader. *in*)]

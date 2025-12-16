@@ -1,6 +1,5 @@
 (ns algorithms)
 
-
 (defn linear-step
   "Один шаг линейной интерполяции.
    state  – {:prev точка-1 :next-x x-для-следующего-вывода :step h}
@@ -30,13 +29,12 @@
 (defn linear-finalize [_state]
   [])
 
-
 (defn newton-coeffs
   [xs ys]
   (let [xs (vec xs)]
-    (loop [k       0
-           coeffs  []
-           fk      (vec ys)]
+    (loop [k      0
+           coeffs []
+           fk     (vec ys)]
       (if (= k (count xs))
         coeffs
         (let [c       (nth fk 0)
@@ -62,10 +60,6 @@
                   (nth coeffs i)))))))
 
 (defn newton-step
-  "Шаг поточной интерполяции Ньютона по окну из n точек.
-   state – {:points [...], :step h, :n n, :next-x x}
-   pt    – новая входная точка.
-   Возвращает {:state new-state :out [[x1 y1] ...]}."
   [{:keys [points step n next-x] :as state} pt]
   (let [pts' (conj (vec points) pt)
         ps   (if (> (count pts') n)
@@ -93,7 +87,6 @@
 
 (defn newton-finalize [_state]
   [])
-
 
 (defn build-algorithms
   [{:keys [linear? newton? step n]}]
