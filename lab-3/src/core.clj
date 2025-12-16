@@ -33,14 +33,12 @@
 
 (defn print-point
   "Форматированный вывод точки (чтобы не было 2.0999999999996)."
-  [name x y]
-  (println (format "%s: %.6f %.6f" name x y)))
+  [alg-name x y]
+  (println (format "%s: %.6f %.6f" alg-name x y)))
 
 (defn process-stream
   "Читает точки из stdin и по мере поступления печатает результаты.
-   Если встречает пустую строку — считает это концом ввода, выполняет
-   финализацию алгоритмов и завершает работу. После каждого обработанного
-   входа делает flush, чтобы вывод не тормозил."
+   Если встречает пустую строку — считает это концом ввода."
   [algos ^BufferedReader rdr]
   (loop [lines (line-seq rdr)
          algos algos]
@@ -50,7 +48,7 @@
         (if (str/blank? line)
           (do
             (doseq [{:keys [name state finalize-fn]} algos
-                    [x y]                        (finalize-fn state)]
+                    [x y] (finalize-fn state)]
               (print-point name x y))
             (flush))
           (let [pt      (parse-point line)
@@ -62,13 +60,13 @@
                                    :out  out}))
                               algos)]
             (doseq [{:keys [name out]} results
-                    [x y]              out]
+                    [x y] out]
               (print-point name x y))
             (flush)
             (recur rest-lines (mapv :algo results)))))
       (do
         (doseq [{:keys [name state finalize-fn]} algos
-                [x y]                        (finalize-fn state)]
+                [x y] (finalize-fn state)]
           (print-point name x y))
         (flush)))))
 
