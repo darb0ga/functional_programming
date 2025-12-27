@@ -26,9 +26,6 @@
                    :step   step}
            :out   out})))))
 
-(defn linear-finalize [_state]
-  [])
-
 (defn newton-coeffs
   [xs ys]
   (let [xs (vec xs)]
@@ -85,20 +82,15 @@
                      :next-x x}
              :out   out}))))))
 
-(defn newton-finalize [_state]
-  [])
-
 (defn build-algorithms
   [{:keys [linear? newton? step n]}]
   (cond-> []
     linear?
     (conj {:name        "linear"
            :state       {:prev nil :next-x nil :step step}
-           :step-fn     linear-step
-           :finalize-fn linear-finalize})
+           :step-fn     linear-step})
 
     newton?
     (conj {:name        "newton"
            :state       {:points [] :next-x nil :step step :n n}
-           :step-fn     newton-step
-           :finalize-fn newton-finalize})))
+           :step-fn     newton-step})))
